@@ -19,6 +19,7 @@ class ViewController: UIViewController {
         [0,0,0,0]
     ]
     
+    //ini untuk ngebuat sebuah variabel untuk nyimpen baris dan kolom
     var maxRow: Int = 0
     var maxCol: Int = 0
     
@@ -44,21 +45,25 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         
+        //deklarasi buttons, karena kita nggak buat di luar viewDidLoad (gak bisa di luar)
         let buttons: [[UIButton]] = [
             [btn00,btn01,btn02,btn03],
             [btn10,btn11,btn12,btn13],
             [btn20,btn21,btn22,btn23]
         ]
         
+        //ini dikurang 1 karena kita hitung, dia mulai dari 1. kalau .count array dia mulai dari 0
         maxRow = matrix.count-1
         maxCol = matrix[0].count-1
         
         randomizeMatrix()
         
+        //kita deklarasi ulang matriks baris 1 kolom ke nilai 0 karena kita mau lock dia supaya gk gerak
         matrix[0][0] = 0
         matrix[0][1] = 0
         matrix[1][0] = 0
         
+        //for loop supaya semua button ke panggil secara dinamis -- daripada yg row 73-76, mending yang ini
         for r in 0...maxRow {
             for c in 0...maxCol {
                 buttons[r][c].imageView?.transform = CGAffineTransform(rotationAngle: CGFloat(matrix[r][c]))
@@ -73,7 +78,7 @@ class ViewController: UIViewController {
     }
     
     func rotateElement(row: Int, col: Int, sender: UIButton) {
-        
+        //delta = selisih data dari tiap button
         matrix[row][col] = matrix[row][col] + delta >= round ? origin : matrix[row][col] + delta
         rotate(view: sender)
         print(matrix)
@@ -130,20 +135,21 @@ class ViewController: UIViewController {
         rotateElement(row: 2, col: 3, sender: btn23)
     }
     
+    //kita ulang (for) sebanyak maxRow yg udah kita deklarasi di atas (baris 56). stelah itu kita buat randomAngle untuk ambil nilai antara 0, Double.pi/2, Double.pi, 3*Double.pi/2
     func randomizeMatrix() {
         for r in 0...maxRow {
             for c in 0...maxCol {
                 let randomAngleIndex: Int = Int.random(in: 0...3)
                 
+                // kita set matrix[baris][kolom] = di angle random
                 matrix[r][c] = rotationOptions[randomAngleIndex]
-                
             }
         }
     }
     
+    //untuk memastikan puzzle sudah benar :*
     func verifyGoal() {
         var status = true
-        
         // let's check every cells
         for r in 0...maxRow {
             for c in 0...maxCol {
@@ -155,6 +161,7 @@ class ViewController: UIViewController {
             }
         }
         
+        //jika benar, panggil notifikasi
         if status {
             let alert = UIAlertController(title: "You Won!", message: "Congratulations 👍", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "Next", style: UIAlertAction.Style.default, handler: { action -> Void in
